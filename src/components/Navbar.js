@@ -5,21 +5,25 @@ import styled from 'styled-components'
 
 const Nav = styled.nav`
   margin: 0;
-  padding: 12px;
+  padding: 12px 0;
   width: 100%;
   min-height: 8vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-
-  background-color: #97a;
+  background-color: #002525;
 `;
 
 const Logo = styled.h3`
   margin: 0;
   font-family: 'Lato', snas-serif;
-  font-size: 1.4em;
+  font-size: 2.0em;
+  color: #fff;
+
+  .red {
+    color: #d55;
+  }
 `;
 
 const Ul = styled.ul`
@@ -28,7 +32,7 @@ const Ul = styled.ul`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  font-size: 1.1em;
+  font-size: 1.0em;
 
    @media (max-width: 768px) {
      flex-direction: column;
@@ -38,7 +42,7 @@ const Ul = styled.ul`
      height: 26vh;
      width: 100%;
      text-align: center;;
-     background-color: #97a;
+     background-color: #002525;
 
      display: ${props => props.toggle ? 'flex' : 'none' }
    }
@@ -47,10 +51,16 @@ const Ul = styled.ul`
 const Li = styled.li`
   padding: 0 12px;
   list-style-type: none;
-`;
-
-const aLink = styled.a`
-  color: #fff;
+  a {
+    color: #fff;
+    text-transform : uppercase;
+    letter-spacing: 4px;
+    outline: 0;
+  }
+  a:hover {
+    color: #d55;
+    transition: all 0.2s ease-out;
+  }
 `;
 
 const Burger = styled.div`
@@ -91,7 +101,7 @@ class Navbar extends React.Component{
   render () {
     return (
       <Nav>
-        <Logo className="nav-aside">NewsViewer</Logo>
+        <Logo className="nav-aside">News<span className="red">Viewer</span></Logo>
         <Ul id="nav-menu" toggle={this.state.menuToggleOn}>
           <Li>
             <Link to="/" onClick={this.toggleMenu} className="nav-link">Home</Link>
