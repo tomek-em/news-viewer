@@ -7,7 +7,7 @@ const Content = styled.div`
   border-radius: 6px;
   margin: 30px 16px;
   padding 16px 16px;
-  box-shadow: 6px 6px 5px 0px rgba(0,60,20,0.5);
+  box-shadow: 6px 6px 5px 0px rgba(0,40,20,0.5);
   text-decoration: none;
 `;
 

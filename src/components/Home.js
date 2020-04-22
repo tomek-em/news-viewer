@@ -23,7 +23,7 @@ const Container = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
-  margin-bottom: 60px;
+  margin-bottom: 120px;
 `;
 
 const A = styled.a`
@@ -38,13 +38,24 @@ class Home extends React.Component {
 
   state = {
     news: [],
+    temp: [],
+    draft: [],
+    polsat: [],
+    biznes: [],
+    tvn: [],
+    mashup: [],
     date: '',
     month: '',
     year: '',
-    sources: {
+    url: {
       tvn: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftvn24.pl%2Fnajnowsze.xml',
-      polsat: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fwszystkie.xml'
-    }
+      polsat: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fwszystkie.xml',
+      biznes: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fbiznes.xml'
+    },
+    src: ['polsat', 'tvn', 'biznes'],
+    chosen_src: [true, true, true],
+    range: [0, 1],
+    all: false
   }
 
   componentDidMount() {
@@ -54,32 +65,113 @@ class Home extends React.Component {
       month: fullDate.getMonth() + 1,
       date: fullDate.getDate()
     }));
-    this.getNews(this.state.sources.polsat, 'polsat');
+    this.getData();
+    window.addEventListener('scroll', this.handleScroll.bind(this));
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  wait(t) {
+    return new Promise(resolve => {
+      setTimeout(() => {resolve('abc')}, t);
+    });
+  }
+
+  async getData() {
+    const { src, range } = this.state;
+    const { polsat, tvn, biznes } = this.state.url;
+    await this.getNews(polsat, src[0]);
+    this.setState({
+      polsat: this.state.temp
+    });
+    await this.getNews(tvn, src[1]);
+    this.setState({
+      tvn: this.state.temp
+    });
+    await this.getNews(biznes, src[2]);
+    this.setState({
+      biznes: this.state.temp,
+      temp: []
+    });
+    this.setNews(range);
+  }
+
+  // get news from Url
   getNews(url, src) {
-    fetch(url)
-    .then((res) => res.json())
-    .then((json) => this.setNews(json.items, src))
-    .catch((err) => console.log("err"));
+    return fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({temp: json.items});
+      });
   }
 
-  setNews(json, src) {
-    let draft = [];
-    json.map((n, i) => {
+  // set news to show
+  setNews(rng) {
+    const { src, chosen_src } = this.state;
+    for(let i = rng[0]; i <= rng[1]; i+= 1) {
+      chosen_src.map((s, index) => {
+        if(s && [src[i]].length) {
+          this.addNews(this.state[src[index]], src[index], i);
+        }
+      });
+    }
+  }
+
+  // add news
+  addNews(recent, src, n) {
+    const regex = /(<([^>]+)>)/ig;
+    let res = recent[n].content.replace(regex, '');
+    const new_obj = {
+      title: recent[n].title,
+      body: res,
+      link: recent[n].link
+    };
+    src == 'tvn' ? new_obj.picture = recent[n].thumbnail : new_obj.picture = recent[n].enclosure.link;
+
+    this.setState({
+      news: [...this.state.news, new_obj]
+    });
+
+  }
+
+  // old - not useed
+  convertNews(recent, src) {
+    recent.map((n, i) => {
       const regex = /(<([^>]+)>)/ig;
       const res = n.content.replace(regex, '');
       const new_obj = {
         title: n.title,
-        body: n.description,
+        body: res,
         link: n.link
       };
-      src == 'polsat' ? new_obj.picture = n.enclosure.link : new_obj.picture = '';
-      draft.push(new_obj);
+      src == 'polsat' ? new_obj.picture = n.enclosure.link : new_obj.picture = n.thumbnail;
+      this.setState({
+        draft: [...this.state.draft, new_obj]
+      });
     });
-    this.setState(state => ({
-      news: draft
-    }));
+  }
+
+  isBottom(e) {
+    return e.getBoundingClientRect().bottom <= window.innerHeight;
+  }
+
+  async handleScroll() {
+    const cont = document.getElementById('home-cont');
+    if (cont.getBoundingClientRect().bottom <= window.innerHeight - 50 && this.state.all == false) {
+      //window.removeEventListener('scroll', this.handleScroll;
+      this.setState({
+        all: true
+      });
+      console.log('waiting');
+      await this.wait(2000);
+      console.log('bottom reached');
+      this.setState({
+        range: [2, 9]
+      });
+      this.setNews(this.state.range);
+    }
   }
 
   render () {
@@ -87,7 +179,7 @@ class Home extends React.Component {
     return (
       <Wrapper>
         <H1>News {date}-{ month }-{ year } </H1>
-        <Container>
+        <Container id="home-cont">
           { news.map((n, i) => (
               <A href={n.link} target="_blank" key={i}><Card title={n.title} body={n.body} picture={n.picture} link={n.link} key={i} /></A>
           )) }

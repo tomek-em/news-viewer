@@ -12,7 +12,7 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
 
-  background-color: #002525;
+  background-color: #033F42;
 `;
 
 const Logo = styled.h3`
@@ -20,6 +20,7 @@ const Logo = styled.h3`
   font-family: 'Lato', snas-serif;
   font-size: 2.0em;
   color: #fff;
+  font-weight: 900;
 
   .red {
     color: #d55;
@@ -42,7 +43,7 @@ const Ul = styled.ul`
      height: 26vh;
      width: 100%;
      text-align: center;;
-     background-color: #002525;
+     background-color: #033F42;
 
      display: ${props => props.toggle ? 'flex' : 'none' }
    }
