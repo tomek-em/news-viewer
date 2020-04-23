@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Card from './Card';
+import Loading from './Loading';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,7 +23,7 @@ const Container = styled.div`
   margin-left: auto;
   margin-right: auto;
   margin-top: 30px;
-  margin-bottom: 120px;
+  margin-bottom: 60px;
 `;
 
 const A = styled.a`
@@ -34,28 +34,28 @@ const A = styled.a`
 class Home extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  state = {
-    news: [],
-    temp: [],
-    draft: [],
-    polsat: [],
-    biznes: [],
-    tvn: [],
-    mashup: [],
-    date: '',
-    month: '',
-    year: '',
-    url: {
-      tvn: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftvn24.pl%2Fnajnowsze.xml',
-      polsat: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fwszystkie.xml',
-      biznes: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fbiznes.xml'
-    },
-    src: ['polsat', 'tvn', 'biznes'],
-    chosen_src: [true, true, true],
-    range: [0, 1],
-    all: false
+    this.state = {
+      news: [],
+      temp: [],
+      draft: [],
+      polsat: [],
+      biznes: [],
+      tvn: [],
+      mashup: [],
+      date: '',
+      month: '',
+      year: '',
+      url: {
+        tvn: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftvn24.pl%2Fnajnowsze.xml',
+        polsat: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fwszystkie.xml',
+        biznes: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fbiznes.xml'
+      },
+      src: ['polsat', 'tvn', 'biznes'],
+      chosen_src: [true, true, true],
+      range: [0, 1],
+      all_showed: false,
+      loading: false
+    }
   }
 
   componentDidMount() {
@@ -128,12 +128,11 @@ class Home extends React.Component {
       body: res,
       link: recent[n].link
     };
-    src == 'tvn' ? new_obj.picture = recent[n].thumbnail : new_obj.picture = recent[n].enclosure.link;
+    src === 'tvn' ? new_obj.picture = recent[n].thumbnail : new_obj.picture = recent[n].enclosure.link;
 
     this.setState({
       news: [...this.state.news, new_obj]
     });
-
   }
 
   // old - not useed
@@ -146,7 +145,7 @@ class Home extends React.Component {
         body: res,
         link: n.link
       };
-      src == 'polsat' ? new_obj.picture = n.enclosure.link : new_obj.picture = n.thumbnail;
+      src === 'polsat' ? new_obj.picture = n.enclosure.link : new_obj.picture = n.thumbnail;
       this.setState({
         draft: [...this.state.draft, new_obj]
       });
@@ -159,23 +158,25 @@ class Home extends React.Component {
 
   async handleScroll() {
     const cont = document.getElementById('home-cont');
-    if (cont.getBoundingClientRect().bottom <= window.innerHeight - 50 && this.state.all == false) {
+    if (cont.getBoundingClientRect().bottom <= window.innerHeight - 50 && this.state.all_showed === false) {
       //window.removeEventListener('scroll', this.handleScroll;
       this.setState({
-        all: true
+        all_showed: true,
+        loading: true
       });
       console.log('waiting');
       await this.wait(2000);
       console.log('bottom reached');
       this.setState({
-        range: [2, 9]
+        range: [2, 9],
+        loading: false
       });
       this.setNews(this.state.range);
     }
   }
 
   render () {
-    const { news, date, month, year } = this.state
+    const { news, date, month, year, loading } = this.state;
     return (
       <Wrapper>
         <H1>News {date}-{ month }-{ year } </H1>
@@ -183,8 +184,8 @@ class Home extends React.Component {
           { news.map((n, i) => (
               <A href={n.link} target="_blank" key={i}><Card title={n.title} body={n.body} picture={n.picture} link={n.link} key={i} /></A>
           )) }
+          <Loading status = { loading} />
         </Container>
-
       </Wrapper>
     );
   }

@@ -48,7 +48,7 @@ class Card extends React.Component {
   render () {
     return (
       <Content>
-        <Picture> <img src={ this.state.picture } /> </Picture>
+        <Picture> <img src={ this.state.picture } alt="" /> </Picture>
         <H3>{ this.state.title }</H3>
         <Body> { this.state.body } </Body>
         <div style={{clear:'both'}}></div>

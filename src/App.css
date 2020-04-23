@@ -21,3 +21,15 @@ h1, h2, h3, h4 {
   text-decoration: none;
   color: #fff;
 }
+
+.anim_first {
+  animation-delay: -600ms;
+}
+
+.anim_sec {
+  animation-delay: -300ms;
+}
+
+.anim_third {
+  animation-delay: 0;
+}
