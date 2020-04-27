@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components'
+import NewsContext from '../context/newsContext'
 
 
 const Nav = styled.nav`
@@ -8,12 +9,18 @@ const Nav = styled.nav`
   padding: 12px 0;
   width: 100%;
   min-height: 8vh;
+  background-color: #033F42;
+`;
+
+const Wrapped = styled.div`
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  background-color: #033F42;
 `;
+
 
 const Logo = styled.h3`
   margin: 0;
@@ -31,13 +38,15 @@ const Ul = styled.ul`
   padding: 0;
   min-width: 10%;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
   align-items: center;
   font-size: 1.0em;
 
    @media (max-width: 768px) {
      flex-direction: column;
+     justify-content: space-around;
      position: fixed;
+     z-index: 2;
      top: 6vh;
      left:0;
      height: 26vh;
@@ -64,15 +73,16 @@ const Li = styled.li`
   }
 `;
 
+
 const Burger = styled.div`
   display: none;
   cursor: pointer;
   float: right;
-  margin-right: 20px;
+  margin-right: 28px;
 
   div {
-    width: 28px;
-    height: 3px;
+    width: 30px;
+    height: 4px;
     background-color: #ddd;
     margin: 5px;
   }
@@ -83,44 +93,38 @@ const Burger = styled.div`
 `;
 
 
-class Navbar extends React.Component{
-  constructor( props ) {
-    super(props);
-    this.state = {menuToggleOn: false};
+const Navbar = (props) => {
+  const newsContext = useContext(NewsContext);
+  const [ menuToggleOn, setMenuToggleOn ] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuToggleOn(menuToggleOn => !menuToggleOn);
   }
 
-  static defaultProps = {
-    toggle: false
-  }
 
-  toggleMenu = () => {
-    this.setState(state => ({
-      menuToggleOn: !state.menuToggleOn
-    }));
-  }
+  const { date, loading } = newsContext;
 
-  render () {
-    return (
-      <Nav>
-        <Logo className="nav-aside">News<span className="red">Viewer</span></Logo>
-        <Ul id="nav-menu" toggle={this.state.menuToggleOn}>
+  return (
+    <Nav>
+      <Wrapped>
+        <Logo className="nav-aside">News<span className="red">Viewer</span> </Logo>
+        <Ul id="nav-menu" toggle={menuToggleOn}>
           <Li>
-            <Link to="/" onClick={this.toggleMenu} className="nav-link">Home</Link>
+            <Link to="/" onClick={toggleMenu} className="nav-link">Home</Link>
           </Li>
           <Li>
-            <Link to="/about" onClick={this.toggleMenu} className="nav-link">About</Link>
+            <Link to="/about" onClick={toggleMenu} className="nav-link">About</Link>
           </Li>
         </Ul>
-        <div className="nav-aside">
-          <Burger id="toggle-menu-btn" onClick={this.toggleMenu} >
-              <div className="line1"></div>
-              <div className="line2"></div>
-              <div className="line3"></div>
-          </Burger>
-        </div>
-      </Nav>
-    )
-  }
+
+        <Burger id="toggle-menu-btn" onClick={toggleMenu} >
+            <div className="line1"></div>
+            <div className="line2"></div>
+            <div className="line3"></div>
+        </Burger>
+      </Wrapped>
+    </Nav>
+  )
 };
 
 export default Navbar

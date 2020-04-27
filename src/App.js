@@ -4,27 +4,30 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import About from './components/About';
 
+import NewsState from './context/NewsState';
+
 import styles from './App.css';
 
 function App() {
 
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
+    <NewsState>
+      <Router>
+        <div className="App">
+          <Navbar />
+            <Switch>
+              <Route exact path="/" render={props => (
+                <Fragment>
+                  <Home />
+                </Fragment>
+                )}/>
 
-          <Switch>
-            <Route exact path="/" render={props => (
-              <Fragment>
-                <Home />
-              </Fragment>
-              )}/>
+              <Route path="/about" component={ About }/>
+            </Switch>
 
-            <Route path="/about" component={ About }/>
-          </Switch>
-
-      </div>
-    </Router>
+        </div>
+      </Router>
+    </NewsState>
   );
 }
 
