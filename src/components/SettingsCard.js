@@ -14,7 +14,7 @@ const Content = styled.div`
   text-decoration: none;
   position: absolute;
   width: 90%;
-  height: 110px;
+  min-height: 110px;
   max-width: 600px;
   top: 40px;
   left: 50%;
@@ -23,21 +23,31 @@ const Content = styled.div`
   display: ${props => props.toggle ? 'block' : 'none' };
 
   h3 {
-    font-size: 1.4em;
+    font-size: 1.3em;
     margin-top: 12px;
     color: #12575A;
   }
 
-  table {
-    position: absolute;
-    bottom: 10px;
+
+`;
+
+const CheckboxCont = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 82%;
+
+  @media (max-width: 768px) {
+    width: 70%;
   }
 `;
 
-const Td = styled.td`
+const Td = styled.div`
   font-size: 1.2em;
   color: #222;
   padding-right: 12px;
+  width: 150px;
 `;
 
 
@@ -89,61 +99,56 @@ const SettingsCard = (props) => {
     <Content toggle={ props.toggle }>
       <Close onClick={() => newsContext.toggleSettings()}> <div className="line first-line"></div> <div className="line second-line"></div> </Close>
       <h3>Wybierz rodzaj wiadomości: </h3>
-      <div>
-        <table>
-        <tbody>
-          <tr>
+      <CheckboxCont>
+        <Td>
+          <label>
+            <Checkbox
+              value={ chosen_src[0] }
+              checked={ chosen_src[0] === true }
+              id = { 0 }
+              onChange={ newsContext.changeSources }/> <span>{ src[0] }</span>
+          </label>
+         </Td>
+        <Td>
+          <label>
+            <Checkbox
+              value={ chosen_src[1] }
+              checked={ chosen_src[1] === true }
+              id = { 1 }
+              onChange={ newsContext.changeSources }/> <span>{ src[1] }</span>
+          </label>
+         </Td>
             <Td>
-              <label>
-                <Checkbox
-                  value={ chosen_src[0] }
-                  checked={ chosen_src[0] === true }
-                  id = { 0 }
-                  onChange={ newsContext.changeSources }/> <span>{ src[0] }</span>
+              <label><Checkbox
+                value={ chosen_src[2] }
+                checked={ chosen_src[2] === true }
+                id = { 2 }
+                onChange={ newsContext.changeSources }/> <span>{ src[2] }</span>
               </label>
-             </Td>
+            </Td>
             <Td>
               <label>
                 <Checkbox
-                  value={ chosen_src[1] }
-                  checked={ chosen_src[1] === true }
-                  id = { 1 }
-                  onChange={ newsContext.changeSources }/> <span>{ src[1] }</span>
+                  value={ chosen_src[3] }
+                  checked={ chosen_src[3] === true }
+                  id = { 3 }
+                  onChange={ newsContext.changeSources }/> <span>{ src[3] }</span>
               </label>
              </Td>
                 <Td>
                   <label><Checkbox
-                    value={ chosen_src[2] }
-                    checked={ chosen_src[2] === true }
-                    id = { 2 }
-                    onChange={ newsContext.changeSources }/> <span>{ src[2] }</span>
+                    value={ chosen_src[4] }
+                    checked={ chosen_src[4] === true }
+                    id = { 4 }
+                    onChange={ newsContext.changeSources }/> <span>{ src[4] }</span>
                   </label>
                 </Td>
-                <Td>
-                  <label>
-                    <Checkbox
-                      value={ chosen_src[3] }
-                      checked={ chosen_src[3] === true }
-                      id = { 3 }
-                      onChange={ newsContext.changeSources }/> <span>{ src[3] }</span>
-                  </label>
-                 </Td>
-                    <Td>
-                      <label><Checkbox
-                        value={ chosen_src[4] }
-                        checked={ chosen_src[4] === true }
-                        id = { 4 }
-                        onChange={ newsContext.changeSources }/> <span>{ src[4] }</span>
-                      </label>
-                    </Td>
-            </tr>
-         </tbody>
-         </table>
+              </CheckboxCont>
          <ConfirmBtn onClick={ () => {
             newsContext.confirmChanges();
             newsContext.toggleSettings();
           }}>OK</ConfirmBtn>
-        </div>
+
     </Content>
   );
 }
