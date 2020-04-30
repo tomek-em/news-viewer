@@ -8,13 +8,16 @@ import {
   SET_NEWS,
   SET_LOADING,
   TOGGLE_SETTINGS,
-  CHANGE_SOURCES
+  CHANGE_SOURCES,
+  RELOAD_NEWS
 } from './types';
 
 const url = {
+  bbc: ' https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Fwww.telegraph.co.uk%2Fnewsfeed%2Frss%2Fnews_main.xml',
   tvn: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftvn24.pl%2Fnajnowsze.xml',
   polsat: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fwszystkie.xml',
-  biznes: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fbiznes.xml'
+  biznes: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.polsatnews.pl%2Frss%2Fbiznes.xml',
+  astronomia: 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fastro4u.net%2Fforum%2Fsyndication.php%3Flimit%3D15'
 };
 
 const NewsState = props => {
@@ -23,9 +26,9 @@ const NewsState = props => {
     news: [],
     stored_news: [],
     temp: [],
-    src: ['polsat', 'tvn', 'biznes'],
-    chosen_src: [true, false, true],
-    range: [0, 1],
+    src: ['Polsat', 'Tvn', 'Biznes', 'Astronomia', 'English'],
+    chosen_src: [true, true, true, false, true],
+    range: [0, 2],
     all_rendered: false,
     loading: false,
     settings_on: false
@@ -60,12 +63,14 @@ const NewsState = props => {
     let polsat = await getNews(url.polsat, state.src[0]);
     let tvn = await getNews(url.tvn, state.src[1]);
     let biznes = await getNews(url.biznes, state.src[2]);
-    setNews([polsat, tvn, biznes], state.range);
+    let astronomia = await getNews(url.astronomia, state.src[3]);
+    let en = await getNews(url.bbc, state.src[4]);
+    setNews([polsat, tvn, biznes, astronomia, en], state.range, state.chosen_src);
   }
 
   // set news in order
   const setNews = (all_news, rng) => {
-    const { src, chosen_src, range } = state;
+    const { src, range, chosen_src } = state;
     const ordered_news = [];
     for(let i = rng[0]; i <= rng[1]; i+= 1) {
       chosen_src.map((s, index) => {
@@ -81,7 +86,6 @@ const NewsState = props => {
       show: ordered_news,
       store: all_news
     });
-    console.log(state.news);
   }
 
   // select needed data from single news
@@ -93,7 +97,11 @@ const NewsState = props => {
       body: res,
       link: recent.link
     };
-    src === 'tvn' ? news_obj.picture = recent.thumbnail : news_obj.picture = recent.enclosure.link;
+    if( src === 'Tvn') {
+      news_obj.picture = recent.thumbnail;
+    } else {
+      news_obj.picture = recent.enclosure.link;
+    }
     return news_obj;
   }
 
@@ -107,7 +115,7 @@ const NewsState = props => {
   const handleScroll = () => {
     const container = document.getElementById('home-cont');
     if (container.getBoundingClientRect().bottom <= window.innerHeight - 50 && state.all_rendered === false) {
-      loadAll();
+      state.stored_news.length != 0 ? loadAll() : console.log('');
     }
   }
 
@@ -118,12 +126,22 @@ const NewsState = props => {
     });
   }
 
-  const changeSources = () => {
+  const reloadNews = () => {
+    dispatch({type: RELOAD_NEWS});
+  }
+
+  const changeSources = (e) => {
+    let sources = state.chosen_src;
+    sources[e.target.id] = !(state.chosen_src[e.target.id]);
     dispatch({
       type: CHANGE_SOURCES,
-      payload: [!state.chosen_src[0], !state.chosen_src[1], !state.chosen_src[2]]
+      payload: sources
     });
-    setNews(state.stored_news, state.range);
+  }
+
+  const confirmChanges = () => {
+    reloadNews();
+    setTimeout(getData, 2000);
   }
 
 
@@ -136,13 +154,15 @@ return (
       stored_news: state.stored_news,
       loading: state.loading,
       settings_on: state.settings_on,
+      src: state.src,
       chosen_src: state.chosen_src,
       getCurrentDate,
       getData,
       loadAll,
       handleScroll,
       toggleSettings,
-      changeSources
+      changeSources,
+      confirmChanges
     }}
   >
     {props.children}

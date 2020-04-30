@@ -6,7 +6,7 @@ import About from './components/About';
 
 import NewsState from './context/NewsState';
 
-import styles from './App.css';
+import './App.css';
 
 function App() {
 

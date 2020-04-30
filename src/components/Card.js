@@ -9,7 +9,26 @@ const Content = styled.div`
   padding 16px 16px;
   box-shadow: 6px 6px 5px 0px rgba(0,40,20,0.5);
   text-decoration: none;
+
+  display: flex;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
+
+
+const TextCont = styled.div`
+  float: left;
+  height: 100%;
+  width: 60%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
 
 const H3 = styled.h3 `
   text-align: left;
@@ -20,10 +39,14 @@ const H3 = styled.h3 `
 
 const Picture = styled.div`
   width: 360px;
-  float: left;
+
   overflow: hidden;
   margin: 10px 20px 10px 10px;
 
+  @media (max-width: 768px) {
+    width: 96%;
+    max-width: 500px;
+  }
   img {
     width: 100%;
   }
@@ -49,8 +72,10 @@ class Card extends React.Component {
     return (
       <Content>
         <Picture> <img src={ this.state.picture } alt="" /> </Picture>
-        <H3>{ this.state.title }</H3>
-        <Body> { this.state.body } </Body>
+        <TextCont>
+          <H3>{ this.state.title }</H3>
+          <Body> { this.state.body } </Body>
+        </TextCont>
         <div style={{clear:'both'}}></div>
       </Content>
     );

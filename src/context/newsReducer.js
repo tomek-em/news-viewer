@@ -3,7 +3,8 @@ import {
   SET_NEWS,
   SET_LOADING,
   TOGGLE_SETTINGS,
-  CHANGE_SOURCES
+  CHANGE_SOURCES,
+  RELOAD_NEWS
 } from './types';
 
 export default(state, action) => {
@@ -35,8 +36,16 @@ export default(state, action) => {
           case CHANGE_SOURCES:
             return {
               ...state,
+              all_rendered: false,
               chosen_src: action.payload
             }
+            case RELOAD_NEWS:
+              return {
+                ...state,
+                loading: true,
+                news: []
+              }
+
     default:
       return state;
   }

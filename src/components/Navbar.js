@@ -8,7 +8,7 @@ const Nav = styled.nav`
   margin: 0;
   padding: 12px 0;
   width: 100%;
-  min-height: 8vh;
+  font-size: 16px;
   background-color: #033F42;
 `;
 
@@ -25,7 +25,7 @@ const Wrapped = styled.div`
 const Logo = styled.h3`
   margin: 0;
   font-family: 'Lato', snas-serif;
-  font-size: 2.0em;
+  font-size: 2.0rem;
   color: #fff;
   font-weight: 900;
 
@@ -40,7 +40,11 @@ const Ul = styled.ul`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 1.0em;
+  font-size: 1.0rem;
+
+  @media (max-width: 1400px) {
+    font-size: 14px;
+  }
 
    @media (max-width: 768px) {
      flex-direction: column;
@@ -53,6 +57,7 @@ const Ul = styled.ul`
      width: 100%;
      text-align: center;;
      background-color: #033F42;
+     font-size: 16px;
 
      display: ${props => props.toggle ? 'flex' : 'none' }
    }
@@ -71,6 +76,7 @@ const Li = styled.li`
     color: #d55;
     transition: all 0.2s ease-out;
   }
+
 `;
 
 
@@ -101,8 +107,6 @@ const Navbar = (props) => {
     setMenuToggleOn(menuToggleOn => !menuToggleOn);
   }
 
-
-  const { date, loading } = newsContext;
 
   return (
     <Nav>
