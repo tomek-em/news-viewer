@@ -13,6 +13,7 @@ export default(state, action) => {
       return {
         ...state,
         all_rendered: false,
+        loading: true,
         date: action.payload
       }
       case SET_NEWS:
