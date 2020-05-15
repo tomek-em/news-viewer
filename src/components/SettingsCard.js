@@ -8,7 +8,7 @@ const Content = styled.div`
   border-radius: 6px;
   margin: 30px 0;
   padding 8px 16px;
-  background-color: #eaeded;
+  background-color: #f4f6f6;
   color: #033F42;
   box-shadow: 6px 6px 5px 0px rgba(0,40,20,0.5);
   text-decoration: none;
@@ -25,7 +25,7 @@ const Content = styled.div`
   h3 {
     font-size: 1.3em;
     margin-top: 12px;
-    color: #12575A;
+    color: #222;
   }
 
 
@@ -57,16 +57,16 @@ const Close = styled.div`
   top: 16px;
 
   .line {
-    width: 32px;
+    width: 28px;
     height: 4px;
-    background-color: #12575A;
+    background-color: #222;
     margin: 4px;
   }
   .first-line {
-    transform: rotate(45deg);
+    transform: rotate(45deg) translateY(6px);
   }
   .second-line {
-    transform: rotate(-45deg) translateX(6px) translateY(-6px);
+    transform: rotate(-45deg) translateY(-5px) ;
   }
   :hover {
     transform: scale(1.1);
