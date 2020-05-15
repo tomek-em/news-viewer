@@ -100,7 +100,7 @@ const Burger = styled.div`
 
 
 const Navbar = (props) => {
-  const newsContext = useContext(NewsContext);
+  // const newsContext = useContext(NewsContext);
   const [ menuToggleOn, setMenuToggleOn ] = useState(false);
 
   const toggleMenu = () => {

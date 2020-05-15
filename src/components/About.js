@@ -26,7 +26,7 @@ class About extends React.Component {
       <AboutCont>
       <h2>News Viewer</h2>
       <p>version: 1.0</p>
-      <p>Simple applicatoin showing current news from different sources.</p>
+      <p>Simple application showing current news from different sources.</p>
       <p>Created by <a href="https://tomaszmejer.com/">Tomasz Mejer</ a></p>
       </AboutCont>
     );
