@@ -73,8 +73,7 @@ const Home = (props) => {
   useEffect(() => {
     newsContext.getCurrentDate();
     newsContext.getData();
-  }, []);  // useEffect runs on component update not only componentDidMOunt. getCurrentDate() function changes state
-            //we need to add [], because otherwise it will run in the loop
+  }, []);  //we need to add [], because otherwise it will run in the loop
 
     useEffect(() => {
       window.addEventListener('scroll', newsContext.handleScroll);
