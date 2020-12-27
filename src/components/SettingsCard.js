@@ -135,14 +135,6 @@ const SettingsCard = (props) => {
                   onChange={ newsContext.changeSources }/> <span>{ src[3] }</span>
               </label>
              </Td>
-                <Td>
-                  <label><Checkbox
-                    value={ chosen_src[4] }
-                    checked={ chosen_src[4] === true }
-                    id = { 4 }
-                    onChange={ newsContext.changeSources }/> <span>{ src[4] }</span>
-                  </label>
-                </Td>
               </CheckboxCont>
          <ConfirmBtn onClick={ () => {
             newsContext.confirmChanges();

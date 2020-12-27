@@ -26,8 +26,8 @@ const NewsState = props => {
     news: [],
     stored_news: [],
     temp: [],
-    src: ['Polsat', 'Tvn', 'Biznes', 'Astronomia', 'English'],
-    chosen_src: [true, true, true, false, true],
+    src: ['Polsat', 'Tvn', 'Biznes', 'English'],
+    chosen_src: [true, true, true, false],
     range: [0, 2],
     all_rendered: false,
     loading: false,
@@ -63,15 +63,17 @@ const NewsState = props => {
     let polsat = await getNews(url.polsat, state.src[0]);
     let tvn = await getNews(url.tvn, state.src[1]);
     let biznes = await getNews(url.biznes, state.src[2]);
-    let astronomia = await getNews(url.astronomia, state.src[3]);
+    //let astronomia = await getNews(url.astronomia, state.src[3]);
     let en = await getNews(url.bbc, state.src[4]);
-    setNews([polsat, tvn, biznes, astronomia, en], state.range, state.chosen_src);
+    setNews([polsat, tvn, biznes, en], state.range);
+
   }
 
   // set news in order
   const setNews = (all_news, rng) => {
     const { src, range, chosen_src } = state;
     const ordered_news = [];
+    console.log(all_news[3][4]);
     for(let i = rng[0]; i <= rng[1]; i+= 1) {
       chosen_src.map((s, index) => {
         let current_news = all_news[index][i];

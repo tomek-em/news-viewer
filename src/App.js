@@ -17,14 +17,10 @@ function App() {
           <Navbar />
             <Switch>
               <Route exact path="/" render={props => (
-                <Fragment>
-                  <Home />
-                </Fragment>
+                <Home />
                 )}/>
-
               <Route path="/about" component={ About }/>
             </Switch>
-
         </div>
       </Router>
     </NewsState>
